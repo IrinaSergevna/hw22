@@ -37,6 +37,32 @@
                                 <td class="w-25">Адрес</td>
                                 <td>Redmond, WA, 98052-6399</td>
                             </tr>
+
+                            <!-- Динамические контактные данные -->
+                            <h3 class="mt-4">Контактные данные</h3>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Имя</th>
+                                        <th>Email</th>
+                                        <th>Телефон</th>
+                                        <th>Адрес</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   {% for contact in contacts %}
+                                       <tr>
+                                           <td>{{ contact.name }}</td>
+                                           <td>{{ contact.email }}</td>
+                                           <td>{{ contact.phone }}</td>
+                                           <td>{{ contact.address }}</td>
+                                       </tr>
+                                   {% empty %}
+                                       <tr>
+                                           <td colspan="4" class="text-center">Контактные данные пока не добавлены.</td>
+                                       </tr>
+                                   {% endfor %}
+                                </tbody>
                         </table>
                     </div>
                 </div>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">  <!-- Контейнер с отступом сверху -->
+    <div class="row justify-content-center">  <!-- Центрирование по горизонтали -->
+        <div class="col-md-8 col-lg-6">  <!-- Ограничение ширины контента -->
+            <div class="card shadow">  <!-- Карточка с тенью -->
+                <div class="card-header bg-primary text-white">  <!-- Заголовок карточки -->
+                    <h1 class="h4 mb-0">{{ product.name }}</h1>  <!-- Название товара -->
+                </div>
+                <div class="card-body">  <!-- Тело карточки -->
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-4">  <!-- Изображение товара -->
+                    {% else %}
+                        <p class="text-muted mb-4"><em>Изображение отсутствует</em></p>  <!-- Сообщение, если изображения нет -->
+                    {% endif %}
+
+                    <div class="mb-4">  <!-- Описание товара -->
+                        <h5 class="card-title">Описание</h5>
+                        <p class="card-text">{{ product.description }}</p>
+                    </div>
+
+                    <div class="mb-4">  <!-- Цена товара -->
+                        <h5 class="card-title">Цена</h5>
+                        <p class="card-text">{{ product.price }} руб.</p>
+                    </div>
+
+                    <div class="text-center">  <!-- Кнопка "Назад" -->
+                        <a href="{% url 'catalog:home' %}" class="btn btn-primary">← Назад к списку товаров</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
-from django.urls import path
-from catalog.apps import CatalogConfig
-from catalog.views import home, contact, contact_page, product_detail, add_product
+from django.urls import path, include
+from catalog.views import ProductListView, ProductDetailView, ProductCreateView, ContactView
 
-app_name = CatalogConfig.name
+app_name = 'catalog'
 
 urlpatterns = [
-    path("", home, name="home"),
-    path("contact/", contact, name="contact"),
-    path('product/<int:pk>/', product_detail, name='product_detail'),
-    path('add_product/', add_product, name='add_product'),
+    path('', ProductListView.as_view(), name='home'),
+    path('product/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
+    path('add_product/', ProductCreateView.as_view(), name='add_product'),
+    path('contact/', ContactView.as_view(), name='contact'),
+    path('blogs/', include('blog.urls')),  # Подключение URL блога
 ]

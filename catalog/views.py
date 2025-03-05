@@ -37,4 +37,4 @@ class ContactView(TemplateView):
         email = request.POST.get("email")
         message = request.POST.get("message")
         print(f"{name} ({email}): {message}")
-        return self.get(request, *args, **kwargs)
+        return redirect('catalog:contact')

@@ -1,32 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">  <!-- Контейнер с отступом сверху -->
-    <div class="row justify-content-center">  <!-- Центрирование по горизонтали -->
-        <div class="col-md-8 col-lg-6">  <!-- Ограничение ширины контента -->
-            <div class="card shadow">  <!-- Карточка с тенью -->
-                <div class="card-header bg-primary text-white">  <!-- Заголовок карточки -->
-                    <h1 class="h4 mb-0">{{ product.name }}</h1>  <!-- Название товара -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0">{{ product.name }}</h1>
                 </div>
-                <div class="card-body">  <!-- Тело карточки -->
+                <div class="card-body">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-4">  <!-- Изображение товара -->
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-4">
                     {% else %}
-                        <p class="text-muted mb-4"><em>Изображение отсутствует</em></p>  <!-- Сообщение, если изображения нет -->
+                        <p class="text-muted mb-4"><em>Изображение отсутствует</em></p>
                     {% endif %}
 
-                    <div class="mb-4">  <!-- Описание товара -->
+                    <div class="mb-4">
                         <h5 class="card-title">Описание</h5>
                         <p class="card-text">{{ product.description }}</p>
                     </div>
 
-                    <div class="mb-4">  <!-- Цена товара -->
+                    <div class="mb-4">
                         <h5 class="card-title">Цена</h5>
                         <p class="card-text">{{ product.price }} руб.</p>
                     </div>
 
-                    <div class="text-center">  <!-- Кнопка "Назад" -->
-                        <a href="{% url 'catalog:home' %}" class="btn btn-primary">← Назад к списку товаров</a>
+                    <div class="text-center">
+                        <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-primary">Редактировать</a>
+                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                        <a href="{% url 'catalog:home' %}" class="btn btn-secondary">← Назад к списку товаров</a>
                     </div>
                 </div>
             </div>

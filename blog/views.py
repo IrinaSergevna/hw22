@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from .models import BlogPost
 from django.core.mail import send_mail
 from django.conf import settings
-
+from .forms import BlogForm
 
 class BlogListView(ListView):
     model = BlogPost
@@ -12,7 +12,6 @@ class BlogListView(ListView):
 
     def get_queryset(self):
         return BlogPost.objects.filter(is_published=True)
-
 
 class BlogDetailView(DetailView):
     model = BlogPost
@@ -25,7 +24,7 @@ class BlogDetailView(DetailView):
         if self.object.views_count == 100:  # Проверяем, достигнуто ли 100 просмотров
             send_mail(
                 'Поздравляем с достижением!',
-                f'Статья "{post.title}" достигла 100 просмотров!',
+                f'Статья "{self.object.title}" достигла 100 просмотров!',
                 settings.DEFAULT_FROM_EMAIL,
                 [settings.EMAIL_HOST_USER],
                 fail_silently=True,  # Если не удаётся отправить, продолжаем работу
@@ -33,22 +32,17 @@ class BlogDetailView(DetailView):
         self.object.save()
         return self.object
 
-
 class BlogCreateView(CreateView):
     model = BlogPost
-    template_name = 'blog_form.html'
-    fields = ['title', 'content', 'preview', 'is_published']
+    form_class = BlogForm
+    template_name = 'blog_create.html'
     success_url = reverse_lazy('blog:blog_list')
-
 
 class BlogUpdateView(UpdateView):
     model = BlogPost
-    template_name = 'blog_form.html'
-    fields = ['title', 'content', 'preview', 'is_published']
-
-    def get_success_url(self):
-        return reverse_lazy('blog:blog_detail', kwargs={'pk': self.object.pk})
-
+    form_class = BlogForm
+    template_name = 'blog_create.html'
+    success_url = reverse_lazy('blog:blog_list')
 
 class BlogDeleteView(DeleteView):
     model = BlogPost

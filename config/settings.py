@@ -23,6 +23,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "catalog",
     "blog",
+    "users",
+
+
 ]
 
 MIDDLEWARE = [
@@ -94,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-ru"
 
 TIME_ZONE = "UTC"
 
@@ -126,3 +129,13 @@ EMAIL_USE_TLS = True  # Используем TLS
 EMAIL_HOST_USER = 'ir.saldaeva@gmail.com'
 EMAIL_HOST_PASSWORD = 'oiue rkje ooie trty'
 DEFAULT_FROM_EMAIL = 'ir.saldaeva@gmail.com'
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_REDIRECT_URL = 'catalog:home'
+LOGOUT_REDIRECT_URL = 'catalog:home'
+LOGIN_URL = 'users:login'
+
+BOOTSTRAP5 = {
+    'include_jquery': True,
+}

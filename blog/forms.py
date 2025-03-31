@@ -4,7 +4,7 @@ from .models import BlogPost
 class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ["title", "content", "preview", "is_published"]  # Убираем category
+        fields = ["title", "content", "preview", "is_published"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

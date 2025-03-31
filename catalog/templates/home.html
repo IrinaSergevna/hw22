@@ -25,6 +25,11 @@
         {% endfor %}
     </div>
 
+    <!-- Кнопка "Добавить товар" -->
+    <div class="text-center mt-4">
+        <a href="{% url 'catalog:add_product' %}" class="btn btn-success">Добавить товар</a>
+    </div>
+
     <!-- Пагинация -->
     <div class="pagination justify-content-center">
         <span class="step-links">
@@ -42,11 +47,6 @@
             <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">Последняя &raquo;</a>
             {% endif %}
         </span>
-    </div>
-
-    <!-- Кнопка "Добавить товар" -->
-    <div class="text-center mt-4">
-        <a href="{% url 'catalog:add_product' %}" class="btn btn-success">Добавить товар</a>
     </div>
 </div>
 {% endblock %}

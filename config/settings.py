@@ -123,7 +123,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'ir.saldaeva.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587  # Порт для TLS (Gmail)
 EMAIL_USE_TLS = True  # Используем TLS
 EMAIL_HOST_USER = 'ir.saldaeva@gmail.com'

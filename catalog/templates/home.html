@@ -30,18 +30,16 @@
         <a href="{% url 'catalog:add_product' %}" class="btn btn-success">Добавить товар</a>
     </div>
 
-    <!-- Пагинация -->
+     <!-- Пагинация -->
     <div class="pagination justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
             <a href="?page=1" class="btn btn-outline-primary">&laquo; Первая</a>
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Предыдущая</a>
             {% endif %}
-
             <span class="current">
                 Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
             </span>
-
             {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Следующая</a>
             <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">Последняя &raquo;</a>

@@ -25,7 +25,6 @@ class CustomUserCreationForm(UserCreationForm):
         user.is_active = True
         if commit:
             user.save()
-            self.send_welcome_email(user)
         return user
 
 

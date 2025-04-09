@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.http import HttpResponseRedirect
 
+
 class UserCreateView(CreateView):
     """Представление для регистрации нового пользователя с подтверждением по email."""
 

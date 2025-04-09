@@ -19,6 +19,15 @@
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text">{{ product.description|truncatechars:100 }}</p>
                     <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
+                    {% if user == product.owner or perms.catalog.change_product %}
+                    <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-secondary">Редактировать</a>
+                    {% endif %}
+                    {% if user == product.owner or perms.catalog.delete_product %}
+                    <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                    {% endif %}
+                    {% if perms.catalog.can_unpublish_product and product.is_published %}
+                    <a href="{% url 'catalog:product_unpublish' product.pk %}" class="btn btn-warning">Отменить публикацию</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

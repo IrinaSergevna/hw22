@@ -1,6 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Product
+from django.core.files.uploadedfile import UploadedFile
+
 
 FORBIDDEN_WORDS = [
     "казино",
@@ -51,15 +53,19 @@ class ProductForm(forms.ModelForm):
         return price
 
     def clean_image(self):
-        image = self.cleaned_data.get("image")
-        if image:
-            # Проверка размера файла (5 МБ = 5 * 1024 * 1024 байт)
-            max_size = 5 * 1024 * 1024  # 5 МБ
-            if image.size > max_size:
-                raise ValidationError("Размер изображения не должен превышать 5 МБ.")
-
-            # Проверка формата файла
-            valid_formats = ["image/jpeg", "image/png"]
-            if image.content_type not in valid_formats:
-                raise ValidationError("Изображение должно быть в формате JPEG или PNG.")
+        image = self.cleaned_data.get('image')
+        # Проверяем, является ли image новым загруженным файлом
+        if image and isinstance(image, UploadedFile):
+            # Проверяем тип файла
+            if image.content_type not in ['image/jpeg', 'image/png']:
+                raise forms.ValidationError('Файл должен быть в формате JPEG или PNG.')
+            # Проверяем размер файла
+            if image.size > 2 * 1024 * 1024:  # 2MB
+                raise forms.ValidationError('Размер файла не должен превышать 2MB.')
         return image
+
+
+class ProductModeratorForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["description", "category"]

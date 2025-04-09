@@ -11,6 +11,10 @@ class BlogPost(models.Model):
     class Meta:
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+        permissions = [
+            ("can_manage_blog", "can manage blog"),
+            ("can_publish_blog", "can publish blog"),
+        ]
 
     def __str__(self):
         return self.title

@@ -26,8 +26,15 @@
                     </div>
 
                     <div class="text-center">
-                        <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-primary">Редактировать</a>
+                        {% if user == product.owner or perms.catalog.change_product %}
+                        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary">Редактировать</a>
+                        {% endif %}
+                        {% if user == product.owner or perms.catalog.delete_product %}
                         <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                        {% endif %}
+                        {% if perms.catalog.can_unpublish_product and product.is_published %}
+                        <a href="{% url 'catalog:product_unpublish' product.pk %}" class="btn btn-warning">Отменить публикацию</a>
+                        {% endif %}
                         <a href="{% url 'catalog:home' %}" class="btn btn-secondary">← Назад к списку товаров</a>
                     </div>
                 </div>

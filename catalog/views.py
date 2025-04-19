@@ -1,10 +1,14 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from django.urls import reverse_lazy
-from .models import Product, ContactInfo
+from .models import Product,  Category, ContactInfo
 from .forms import ProductForm, ProductModeratorForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import  redirect
 from django.core.exceptions import PermissionDenied
+from .services import get_products_from_cache, get_products_by_category
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 
 
 class ProductListView(ListView):
@@ -28,10 +32,40 @@ class ProductListView(ListView):
             context['can_edit_product'] = False
             context['can_unpublish_product'] = False
             context['can_delete_product'] = False
-            context['categories'] = Product._meta.get_field('category').choices
+        context['categories'] = Category.objects.all()
+        return context
+
+    def get_queryset(self):
+        return get_products_from_cache()
+
+
+class CategoryProductListView(ListView):
+    """Представление для отображения продуктов в указанной категории"""
+    model = Product
+    template_name = 'category_products.html'
+    context_object_name = 'page_obj'
+    paginate_by = 6
+
+    def get_queryset(self):
+        category_name = self.kwargs['category']
+        try:
+            products = get_products_by_category(category_name)
+            if not products.exists():
+                products = Product.objects.filter(category__name__iexact=category_name, is_published=True)
+            return products
+        except Exception as e:
+            return Product.objects.filter(category__name__iexact=category_name, is_published=True)
+
+    def get_context_data(self, **kwargs):
+        """Добавляет в контекст название категории и список категорий"""
+        context = super().get_context_data(**kwargs)
+        category_name = self.kwargs['category']
+        context['category'] = category_name.title()
+        context['categories'] = Category.objects.all()
         return context
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     Представление для отображения детальной информации о продукте.
@@ -178,5 +212,4 @@ class UnpublishProductView(PermissionRequiredMixin, UpdateView):
     def form_valid(self, form):
         """Снимает продукт с публикации."""
         form.instance.is_published = False
-        form.instance.save()
         return super().form_valid(form)

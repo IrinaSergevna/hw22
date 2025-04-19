@@ -2,9 +2,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# Загружаем переменные окружения из файла .env
 
-load_dotenv(override=True)
+load_dotenv(override=True) # Загружаем переменные окружения из файла .env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,12 +54,6 @@ TEMPLATES = [
     },
 ]
 
-
-
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -71,10 +64,6 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -91,10 +80,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "ru-ru"
 
 TIME_ZONE = "UTC"
@@ -103,37 +88,38 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [str(BASE_DIR / "static")]
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # Порт для TLS (Gmail)
-EMAIL_USE_TLS = True  # Используем TLS
-EMAIL_HOST_USER = 'ir.saldaeva@gmail.com'
-EMAIL_HOST_PASSWORD = 'oiue rkje ooie trty'
-DEFAULT_FROM_EMAIL = 'ir.saldaeva@gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
 
-AUTH_USER_MODEL = 'users.CustomUser'
+DEFAULT_FROM_EMAIL = "ir.saldaeva@gmail.com"
 
-LOGIN_REDIRECT_URL = 'catalog:home'
-LOGOUT_REDIRECT_URL = 'catalog:home'
-LOGIN_URL = 'users:login'
+AUTH_USER_MODEL = "users.CustomUser"
+
+LOGIN_REDIRECT_URL = "catalog:home"
+LOGOUT_REDIRECT_URL = "catalog:home"
+LOGIN_URL = "users:login"
 
 BOOTSTRAP5 = {
-    'include_jquery': True,
+    "include_jquery": True,
+}
+
+CACHE_ENABLED = True
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("LOCATION")
+    }
 }

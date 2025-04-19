@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Product
+from .models import Product, Category
 from django.core.files.uploadedfile import UploadedFile
 
 
@@ -28,6 +28,8 @@ class ProductForm(forms.ModelForm):
         self.fields["price"].widget.attrs.update({"class": "form-control", "placeholder": "Введите цену"})
         self.fields["category"].widget.attrs.update({"class": "form-select"})
         self.fields["image"].widget.attrs.update({"class": "form-control"})
+        self.fields['category'].queryset = Category.objects.all()
+        self.fields['category'].empty_label = "Выберите категорию"
 
     def clean_name(self):
         name = self.cleaned_data.get("name")

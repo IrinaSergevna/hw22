@@ -1,22 +1,22 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
 from django.urls import reverse_lazy
-from .models import Product,  Category, ContactInfo
+from .models import Product, Category, ContactInfo
 from .forms import ProductForm, ProductModeratorForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import  redirect
+from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 from .services import get_products_from_cache, get_products_by_category
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
-
 
 class ProductListView(ListView):
     """Представление для отображения списка продуктов"""
     model = Product
     template_name = 'home.html'
-    context_object_name = 'page_obj'
     paginate_by = 6
+
+    def get_queryset(self):
+        return get_products_from_cache()
 
     def get_context_data(self, **kwargs):
         """Добавляет в контекст права пользователя"""
@@ -35,35 +35,24 @@ class ProductListView(ListView):
         context['categories'] = Category.objects.all()
         return context
 
-    def get_queryset(self):
-        return get_products_from_cache()
-
-
 class CategoryProductListView(ListView):
     """Представление для отображения продуктов в указанной категории"""
     model = Product
     template_name = 'category_products.html'
-    context_object_name = 'page_obj'
     paginate_by = 6
 
     def get_queryset(self):
         category_name = self.kwargs['category']
-        try:
-            products = get_products_by_category(category_name)
-            if not products.exists():
-                products = Product.objects.filter(category__name__iexact=category_name, is_published=True)
-            return products
-        except Exception as e:
-            return Product.objects.filter(category__name__iexact=category_name, is_published=True)
+        products = get_products_by_category(category_name)
+        return products
 
     def get_context_data(self, **kwargs):
-        """Добавляет в контекст название категории и список категорий"""
+        """Добавляет в контекст название категории"""
         context = super().get_context_data(**kwargs)
         category_name = self.kwargs['category']
         context['category'] = category_name.title()
         context['categories'] = Category.objects.all()
         return context
-
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
@@ -73,7 +62,6 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     model = Product
     template_name = 'product_detail.html'
-    context_object_name = 'product'
 
     def get_context_data(self, **kwargs):
         """Добавляет в контекст права пользователя для управления продуктом."""
@@ -89,13 +77,11 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
             context['can_delete_product'] = False
         return context
 
-
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Представление для создания нового продукта.
     Доступно только авторизованным пользователям.
     """
-
     model = Product
     form_class = ProductForm
     template_name = 'add_product.html'
@@ -105,7 +91,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         """Устанавливает текущего пользователя как владельца продукта."""
         form.instance.owner = self.request.user
         return super().form_valid(form)
-
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
@@ -146,7 +131,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             return super().form_invalid(form)
         return super().form_valid(form)
 
-
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """
     Представление для удаления продукта.
@@ -174,7 +158,6 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
-
 class ContactView(TemplateView):
     """
     Представление для отображения и обработки контактной формы.
@@ -197,7 +180,6 @@ class ContactView(TemplateView):
         message = request.POST.get("message")
         print(f"{name} ({email}): {message}")
         return redirect('catalog:contact')
-
 
 class UnpublishProductView(PermissionRequiredMixin, UpdateView):
     """

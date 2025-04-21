@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="row">
-        {% for product in page_obj %}
+        {% for product in object_list %}
         <div class="col-md-4 mb-4">
             <div class="card">
                 {% if product.image %}
@@ -31,6 +31,10 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>В этой категории нет продуктов.</p>
+        </div>
         {% endfor %}
     </div>
 
@@ -39,11 +43,11 @@
         <a href="{% url 'catalog:add_product' %}" class="btn btn-success">Добавить товар</a>
     </div>
 
-     <!-- Пагинация -->
+    <!-- Пагинация -->
     <div class="pagination justify-content-center">
         <span class="step-links">
             {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-outline-primary">&laquo; Первая</a>
+            <a href="?page=1" class="btn btn-outline-primary">« Первая</a>
             <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Предыдущая</a>
             {% endif %}
             <span class="current">
@@ -51,7 +55,7 @@
             </span>
             {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Следующая</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">Последняя &raquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">Последняя »</a>
             {% endif %}
         </span>
     </div>

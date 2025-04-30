@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0">{{ post.title }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if post.preview %}
+                    <img src="{{ post.preview.url }}" alt="{{ post.title }}" class="img-fluid mb-4">
+                    {% endif %}
+                    <p>{{ post.content }}</p>
+                    <p>Просмотров: {{ post.views_count }}</p>
+                    <p>Дата создания: {{ post.created_at|date:"d.m.Y" }}</p>
+                    <div class="text-center">
+                        <a href="{% url 'blog:blog_edit' post.pk %}" class="btn btn-primary">Редактировать</a>
+                        <a href="{% url 'blog:blog_delete' post.pk %}" class="btn btn-danger">Удалить</a>
+                        <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary">Назад</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

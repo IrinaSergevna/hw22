@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0">{{ product.name }}</h1>
+                </div>
+                <div class="card-body">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-4">
+                    {% else %}
+                        <p class="text-muted mb-4"><em>Изображение отсутствует</em></p>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <h5 class="card-title">Описание</h5>
+                        <p class="card-text">{{ product.description }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="card-title">Цена</h5>
+                        <p class="card-text">{{ product.price }} руб.</p>
+                    </div>
+
+                    <div class="text-center">
+                        {% if user == product.owner or perms.catalog.change_product %}
+                        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary">Редактировать</a>
+                        {% endif %}
+                        {% if user == product.owner or perms.catalog.delete_product %}
+                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+                        {% endif %}
+                        {% if perms.catalog.can_unpublish_product and product.is_published %}
+                        <a href="{% url 'catalog:product_unpublish' product.pk %}" class="btn btn-warning">Отменить публикацию</a>
+                        {% endif %}
+                        <a href="{% url 'catalog:home' %}" class="btn btn-secondary">← Назад к списку товаров</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

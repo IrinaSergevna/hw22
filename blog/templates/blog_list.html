@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1 class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">Блог</h1>
+    {% if perms.blog.can_manage_blog %}
+    <a href="{% url 'blog:blog_create' %}" class="btn btn-primary mb-3">Добавить пост</a>
+    {% endif %}
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if post.preview %}
+                <img src="{{ post.preview.url }}" class="card-img-top" alt="{{ post.title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Нет изображения">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|truncatechars:100 }}</p>
+                    <a href="{% url 'blog:blog_detail' post.pk %}" class="btn btn-primary">Подробнее</a>
+                    {% if perms.blog.can_manage_blog %}
+                    <a href="{% url 'blog:blog_update' post.pk %}" class="btn btn-secondary">Редактировать</a>
+                    <a href="{% url 'blog:blog_delete' post.pk %}" class="btn btn-danger">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
